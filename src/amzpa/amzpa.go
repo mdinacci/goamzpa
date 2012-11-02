@@ -68,9 +68,9 @@ func NewRequest(accessKeyID string, accessKeySecret string, associateTag string,
 
 // Perform an ItemLookup request.
 //
-// Ex:
-// asins := []string{"01289328","2837423"}
-// response,err := request.ItemLookup(asins, "Medium", "ASIN")
+// Usage:
+// ids := []string{"01289328","2837423"}
+// response,err := request.ItemLookup(ids, "Medium", "ASIN")
 func (self AmazonRequest) ItemLookup(itemIds []string, responseGroup string, idType string) (ItemLookupResponse, error) {
 	now := time.Now()
 	arguments := make(map[string]string)
@@ -122,19 +122,7 @@ func (self AmazonRequest) ItemLookup(itemIds []string, responseGroup string, idT
 		return ItemLookupResponse{}, err
 	}
 
-	return Unmarshal(content)
-}
-
-// TODO return a ItemLookupResponse struct instead of a String
-func Unmarshal(contents []byte) (ItemLookupResponse, error) {
-	itemLookupResponse := ItemLookupResponse{}
-	err := xml.Unmarshal(contents, &itemLookupResponse)
-
-	if err != nil {
-		return ItemLookupResponse{}, err
-	}
-
-	return itemLookupResponse, err
+	return unmarshal(content)
 }
 
 // TODO add "Accept-Encoding": "gzip" and override UserAgent
@@ -156,3 +144,13 @@ func doRequest(requestURL string) ([]byte, error) {
 	return contents, err
 }
 
+func unmarshal(contents []byte) (ItemLookupResponse, error) {
+	itemLookupResponse := ItemLookupResponse{}
+	err := xml.Unmarshal(contents, &itemLookupResponse)
+
+	if err != nil {
+		return ItemLookupResponse{}, err
+	}
+
+	return itemLookupResponse, err
+}
