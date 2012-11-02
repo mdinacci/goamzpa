@@ -29,13 +29,18 @@ probably will, use at your own peril.
 		itemsType := "ASIN"
 		response,err := request.ItemLookup(asins, responseGroup, itemsType)
 
-	    fmt.Printf("%s \n", response)
+        item := response.Items[0]
+        fmt.Printf("ASIN: %s\n", item.ASIN)
+        fmt.Printf("DetailPageURL: %s\n", item.DetailPageURL)
+        fmt.Printf("Author: %s\n", item.Author)
+        fmt.Printf("Price: %s\n", item.Price)
+        fmt.Printf("Medium Image URL: %s\n", item.MediumImage.URL)
 	}
  
  
 
 ## TODO
-* Map the XML to a struct, so that the response is not just a big string
+* [IN PROGRESS] Map the XML to a struct, so that the response is not just a big string
 * ItemSearch
 * Gzip compression
 
