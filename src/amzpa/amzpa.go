@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"sort"
 	"time"
-	"encoding/xml"
 	"io/ioutil"
 	"strings"
 	"net/url"
@@ -38,27 +37,6 @@ type AmazonRequest struct {
 	accessKeySecret string;
 	associateTag string
 	region string;
-}
-
-type Image struct {
-	XMLName xml.Name `xml:"MediumImage"`
-	URL string
-	Height uint16
-	Width uint16
-}
-
-type Item struct {
-	XMLName xml.Name `xml:"Item"`
-	ASIN string
-	DetailPageURL string
-	Author string `xml:"ItemAttributes>Author"`
-	Price string `xml:"ItemAttributes>ListPrice>FormattedPrice"`
-	MediumImage Image
-}
-
-type ItemLookupResponse struct {
-	XMLName xml.Name `xml:"ItemLookupResponse"`
-	Items []Item `xml:"Items>Item"`
 }
 
 // Create a new AmazonRequest initialized with the given parameters
@@ -144,13 +122,3 @@ func doRequest(requestURL string) ([]byte, error) {
 	return contents, err
 }
 
-func unmarshal(contents []byte) (ItemLookupResponse, error) {
-	itemLookupResponse := ItemLookupResponse{}
-	err := xml.Unmarshal(contents, &itemLookupResponse)
-
-	if err != nil {
-		return ItemLookupResponse{}, err
-	}
-
-	return itemLookupResponse, err
-}
