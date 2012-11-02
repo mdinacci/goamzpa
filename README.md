@@ -1,9 +1,10 @@
 # goamzpa
 
-A [Go lang](http://golang.org) library to use the _Amazon Product API_. 
+A BSD licensed [Go lang](http://golang.org) library to use the _Amazon Product API_. 
 Also my first `Go` project.
 
-At the moment it supports only `ItemLookup`.
+At the moment it supports only `ItemLookup`. Everything can change, and
+probably will, use at your own peril.
 
 ## Usage
     
@@ -34,6 +35,7 @@ At the moment it supports only `ItemLookup`.
  
 
 ## TODO
+* Map the XML to a struct, so that the response is not just a big string
 * ItemSearch
 * Gzip compression
 

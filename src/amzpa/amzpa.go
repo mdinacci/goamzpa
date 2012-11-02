@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"sort"
 	"time"
+	"encoding/xml"
 	"io/ioutil"
 	"strings"
 	"net/url"
@@ -39,6 +40,27 @@ type AmazonRequest struct {
 	region string;
 }
 
+type Image struct {
+	XMLName xml.Name `xml:"MediumImage"`
+	URL string
+	Height uint16
+	Width uint16
+}
+
+type Item struct {
+	XMLName xml.Name `xml:"Item"`
+	ASIN string
+	DetailPageURL string
+	Author string `xml:"ItemAttributes>Author"`
+	Price string `xml:"ItemAttributes>ListPrice>FormattedPrice"`
+	MediumImage Image
+}
+
+type ItemLookupResponse struct {
+	XMLName xml.Name `xml:"ItemLookupResponse"`
+	Items []Item `xml:"Items>Item"`
+}
+
 // Create a new AmazonRequest initialized with the given parameters
 func NewRequest(accessKeyID string, accessKeySecret string, associateTag string, region string) *AmazonRequest {
 	return &AmazonRequest{accessKeyID, accessKeySecret, associateTag, region}
@@ -49,21 +71,13 @@ func NewRequest(accessKeyID string, accessKeySecret string, associateTag string,
 // Ex:
 // asins := []string{"01289328","2837423"}
 // response,err := request.ItemLookup(asins, "Medium", "ASIN")
-func (req AmazonRequest) ItemLookup(itemIds []string,
-responseGroup string, idType string) (response string, err error) {
-	return req.makeCall("ItemLookup", itemIds, responseGroup, idType)
-}
-
-// TODO return an error in addition to the response
-func (self AmazonRequest) makeCall(operation string, itemIds []string,
-	responseGroup string, idType string) (string, error) {
-
+func (self AmazonRequest) ItemLookup(itemIds []string, responseGroup string, idType string) (ItemLookupResponse, error) {
 	now := time.Now()
 	arguments := make(map[string]string)
 	arguments["AWSAccessKeyId"] = self.accessKeyID
 	arguments["Version"] = "2011-08-01"
 	arguments["Timestamp"] = now.Format("2006-01-02T15:04:05Z")
-	arguments["Operation"] = operation
+	arguments["Operation"] = "ItemLookup"
 	arguments["Service"] = "AWSEcommerceService"
 	arguments["AssociateTag"] = self.associateTag // optional
 	arguments["ItemId"] = strings.Join(itemIds, ",")
@@ -102,9 +116,25 @@ func (self AmazonRequest) makeCall(operation string, itemIds []string,
 
 	// Do request
 	requestURL := fmt.Sprintf("http://%s/onca/xml?%s", domain, queryString)
-	contents, err := doRequest(requestURL)
+	content, err := doRequest(requestURL)
 
-	return string(contents), err
+	if err != nil {
+		return ItemLookupResponse{}, err
+	}
+
+	return Unmarshal(content)
+}
+
+// TODO return a ItemLookupResponse struct instead of a String
+func Unmarshal(contents []byte) (ItemLookupResponse, error) {
+	itemLookupResponse := ItemLookupResponse{}
+	err := xml.Unmarshal(contents, &itemLookupResponse)
+
+	if err != nil {
+		return ItemLookupResponse{}, err
+	}
+
+	return itemLookupResponse, err
 }
 
 // TODO add "Accept-Encoding": "gzip" and override UserAgent
