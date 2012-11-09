@@ -48,8 +48,8 @@ func NewRequest(accessKeyID string, accessKeySecret string, associateTag string,
 //
 // Usage:
 // ids := []string{"01289328","2837423"}
-// response,err := request.ItemLookup(ids, "Medium", "ASIN")
-func (self AmazonRequest) ItemLookup(itemIds []string, responseGroup string, idType string) (ItemLookupResponse, error) {
+// response,err := request.ItemLookup(ids, "Medium,Accessories", "ASIN")
+func (self AmazonRequest) ItemLookup(itemIds []string, responseGroups string, idType string) (ItemLookupResponse, error) {
 	now := time.Now()
 	arguments := make(map[string]string)
 	arguments["AWSAccessKeyId"] = self.accessKeyID
@@ -57,9 +57,9 @@ func (self AmazonRequest) ItemLookup(itemIds []string, responseGroup string, idT
 	arguments["Timestamp"] = now.Format("2006-01-02T15:04:05Z")
 	arguments["Operation"] = "ItemLookup"
 	arguments["Service"] = "AWSEcommerceService"
-	arguments["AssociateTag"] = self.associateTag // optional
+	arguments["AssociateTag"] = self.associateTag 
 	arguments["ItemId"] = strings.Join(itemIds, ",")
-	arguments["ResponseGroup"] = responseGroup
+	arguments["ResponseGroup"] = responseGroups
 	arguments["IdType"] = idType
 
 	// Sort the keys otherwise Amazon hash will be

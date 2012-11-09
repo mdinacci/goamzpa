@@ -12,7 +12,7 @@ probably will, use at your own peril.
 
 	import (
 		"fmt"
-		"amzpa"
+        "github.com/mdinacci/goamzpa/amzpa"
 	)
 
 	func main() {
@@ -25,9 +25,9 @@ probably will, use at your own peril.
 		request := amzpa.NewRequest(accessKey, accessSecret , associateTag, region)
 		asins:= []string{"0141033576,0615314465,1470057719"}
 		
-		responseGroup := "Medium"
+		responseGroups := "Medium,Accessories"
 		itemsType := "ASIN"
-		response,err := request.ItemLookup(asins, responseGroup, itemsType)
+		response,err := request.ItemLookup(asins, responseGroups, itemsType)
 
         item := response.Items[0]
         fmt.Printf("ASIN: %s\n", item.ASIN)
@@ -41,6 +41,7 @@ probably will, use at your own peril.
 
 ## TODO
 * [IN PROGRESS] Map the XML to a struct, so that the response is not just a big string
+* Support more than one ResponseGroup
 * ItemSearch
 * Gzip compression
 
