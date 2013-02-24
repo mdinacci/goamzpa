@@ -13,24 +13,31 @@ import (
 
 type Image struct {
 	XMLName xml.Name `xml:"MediumImage"`
-	URL 	string
-	Height 	uint16
-	Width 	uint16
+	URL     string
+	Height  uint16
+	Width   uint16
 }
 
 type Item struct {
-	XMLName 	xml.Name `xml:"Item"`
-	ASIN 		string
-	URL 		string
-	Author 		string `xml:"ItemAttributes>Author"`
-	Price 		string `xml:"ItemAttributes>ListPrice>FormattedPrice"`
-	PriceRaw 	string `xml:"ItemAttributes>ListPrice>Amount"`
-	MediumImage Image
+	XMLName       xml.Name `xml:"Item"`
+	ASIN          string
+	URL           string
+	DetailPageURL string
+	Author        string `xml:"ItemAttributes>Author"`
+	Price         string `xml:"ItemAttributes>ListPrice>FormattedPrice"`
+	PriceRaw      string `xml:"ItemAttributes>ListPrice>Amount"`
+	MediumImage   Image
+}
+
+type ItemCollection struct {
+	XMLName xml.Name `xml:"Items"`
+	Items   []Item   `xml:"Item"`
+	IsValid bool     `xml:"Request>IsValid"`
 }
 
 type ItemLookupResponse struct {
-	XMLName xml.Name `xml:"ItemLookupResponse"`
-	Items 	[]Item `xml:"Items>Item"`
+	XMLName        xml.Name `xml:"ItemLookupResponse"`
+	ItemCollection ItemCollection
 }
 
 func unmarshal(contents []byte) (ItemLookupResponse, error) {

@@ -8,35 +8,35 @@
 package amzpa
 
 import (
-	"fmt"
-	"sort"
-	"time"
-	"io/ioutil"
-	"strings"
-	"net/url"
-	"net/http"
-	"encoding/base64"
 	"crypto/hmac"
 	"crypto/sha256"
+	"encoding/base64"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"sort"
+	"strings"
+	"time"
 )
 
-var service_domains = map[string] string {
-     "CA": "ecs.amazonaws.ca",
-     "CN": "webservices.amazon.cn",
-     "DE": "ecs.amazonaws.de",
-     "ES": "webservices.amazon.es",
-     "FR": "ecs.amazonaws.fr",
-     "IT": "webservices.amazon.it",
-     "JP": "ecs.amazonaws.jp",
-     "UK": "ecs.amazonaws.co.uk",
-     "US": "ecs.amazonaws.com",
+var service_domains = map[string]string{
+	"CA": "ecs.amazonaws.ca",
+	"CN": "webservices.amazon.cn",
+	"DE": "ecs.amazonaws.de",
+	"ES": "webservices.amazon.es",
+	"FR": "ecs.amazonaws.fr",
+	"IT": "webservices.amazon.it",
+	"JP": "ecs.amazonaws.jp",
+	"UK": "ecs.amazonaws.co.uk",
+	"US": "ecs.amazonaws.com",
 }
 
 type AmazonRequest struct {
-	accessKeyID string;
-	accessKeySecret string;
-	associateTag string
-	region string;
+	accessKeyID     string
+	accessKeySecret string
+	associateTag    string
+	region          string
 }
 
 // Create a new AmazonRequest initialized with the given parameters
@@ -54,7 +54,7 @@ func (self AmazonRequest) ItemLookup(itemIds []string, responseGroup string, idT
 	arguments := make(map[string]string)
 	arguments["AWSAccessKeyId"] = self.accessKeyID
 	arguments["Version"] = "2011-08-01"
-	arguments["Timestamp"] = now.Format("2006-01-02T15:04:05Z")
+	arguments["Timestamp"] = now.Format(time.RFC3339)
 	arguments["Operation"] = "ItemLookup"
 	arguments["Service"] = "AWSEcommerceService"
 	arguments["AssociateTag"] = self.associateTag // optional
@@ -121,4 +121,3 @@ func doRequest(requestURL string) ([]byte, error) {
 
 	return contents, err
 }
-
