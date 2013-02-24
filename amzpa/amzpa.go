@@ -54,7 +54,7 @@ func (self AmazonRequest) ItemLookup(itemIds []string, responseGroups string, id
 	arguments := make(map[string]string)
 	arguments["AWSAccessKeyId"] = self.accessKeyID
 	arguments["Version"] = "2011-08-01"
-	arguments["Timestamp"] = now.Format("2006-01-02T15:04:05Z")
+	arguments["Timestamp"] = now.Format(time.RFC3339)
 	arguments["Operation"] = "ItemLookup"
 	arguments["Service"] = "AWSEcommerceService"
 	arguments["AssociateTag"] = self.associateTag 
