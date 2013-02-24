@@ -20,21 +20,24 @@ probably will, use at your own peril.
 		accessKey := "ACCESS_KEY"
 		accessSecret := "ACCESS_SECRET"
 		associateTag := "ASSOCIATE_TAG"
-		region := "UK"
-	
-		request := amzpa.NewRequest(accessKey, accessSecret , associateTag, region)
-		asins:= []string{"0141033576,0615314465,1470057719"}
-		
+		region := "US"
+
+		request := amzpa.NewRequest(accessKey, accessSecret, associateTag, region)
+		asins := []string{"B0056L5T9A,B009EOMNSA"}
+
 		responseGroup := "Medium"
 		itemsType := "ASIN"
-		response,err := request.ItemLookup(asins, responseGroup, itemsType)
+		response, err := request.ItemLookup(asins, responseGroup, itemsType)
 
-        item := response.Items[0]
-        fmt.Printf("ASIN: %s\n", item.ASIN)
-        fmt.Printf("DetailPageURL: %s\n", item.DetailPageURL)
-        fmt.Printf("Author: %s\n", item.Author)
-        fmt.Printf("Price: %s\n", item.Price)
-        fmt.Printf("Medium Image URL: %s\n", item.MediumImage.URL)
+		if err == nil {
+			item := response.Items[0]
+			fmt.Printf("ASIN: %s\n", item.ASIN)
+			fmt.Printf("Author: %s\n", item.Author)
+			fmt.Printf("Price: %s\n", item.Price)
+			fmt.Printf("Medium Image URL: %s\n", item.MediumImage.URL)
+		} else {
+			fmt.Println(err)
+		}
 	}
  
  
