@@ -13,36 +13,37 @@ import (
 
 type Image struct {
 	XMLName xml.Name `xml:"MediumImage"`
-	URL 	string
-	Height 	uint16
-	Width 	uint16
+	URL     string
+	Height  uint16
+	Width   uint16
 }
 
 type Item struct {
-	XMLName 	xml.Name `xml:"Item"`
-	ASIN 		string
-	URL 		string
+	XMLName       xml.Name `xml:"Item"`
+	ASIN          string
+	URL           string
 	DetailPageURL string
-	Author 		string `xml:"ItemAttributes>Author"`
-	Price 		string `xml:"ItemAttributes>ListPrice>FormattedPrice"`
-	PriceRaw 	string `xml:"ItemAttributes>ListPrice>Amount"`
-	MediumImage Image
+	Author        string `xml:"ItemAttributes>Author"`
+	Price         string `xml:"ItemAttributes>ListPrice>FormattedPrice"`
+	PriceRaw      string `xml:"ItemAttributes>ListPrice>Amount"`
+	Title         string `xml:"ItemAttributes>Title"`
+	MediumImage   Image
 }
 
 type Request struct {
-	XMLName xml.Name `xml:"Request"`
-	IsValid bool 	 `xml:"IsValid"`
+	XMLName           xml.Name          `xml:"Request"`
+	IsValid           bool              `xml:"IsValid"`
 	ItemLookupRequest ItemLookupRequest `xml:"ItemLookupRequest"`
 }
 
 type ItemLookupRequest struct {
-	XMLName 	xml.Name `xml:"ItemLookupRequest"`
+	XMLName xml.Name `xml:"ItemLookupRequest"`
 	// TODO not sure how to map this yet
 }
 
 type ItemLookupResponse struct {
 	XMLName xml.Name `xml:"ItemLookupResponse"`
-	Items 	[]Item 	 `xml:"Items>Item"`
+	Items   []Item   `xml:"Items>Item"`
 	Request Request  `xml:"Items>Request"`
 }
 
